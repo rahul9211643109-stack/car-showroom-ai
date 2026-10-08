@@ -222,7 +222,10 @@ def apply_batch_auto(folder, regions, logo_path=None):
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return """
+    <h1>Car Showroom AI</h1>
+    <p>Website is running successfully on Render.</p>
+    """
 
 
 @app.route("/upload", methods=["POST"])
