@@ -171,9 +171,7 @@ def apply_regions(image_path, regions, logo_path=None):
         box=_pct_box_to_px(r,iw,ih)
         x1,y1,x2,y2=box; mask[y1:y2,x1:x2]=255; boxes.append(box)
     if not boxes: return False
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
-    mask = cv2.dilate(mask, kernel, iterations=1)
-    result=cv2.inpaint(img,mask,9,cv2.INPAINT_NS)
+    result=cv2.inpaint(img,mask,5,cv2.INPAINT_TELEA)
     for box in boxes: result=_place_logo(result,logo_path,box)
     cv2.imwrite(str(image_path),result,[int(cv2.IMWRITE_JPEG_QUALITY),92]); return True
 
@@ -212,9 +210,7 @@ def apply_batch_auto(folder, regions, logo_path=None):
         mask=np.zeros((ih2,iw2),dtype=np.uint8)
         for x1,y1,x2,y2 in boxes:
             x1=max(0,min(x1,iw2-1)); y1=max(0,min(y1,ih2-1)); x2=max(x1+1,min(x2,iw2)); y2=max(y1+1,min(y2,ih2)); mask[y1:y2,x1:x2]=255
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
-        mask = cv2.dilate(mask, kernel, iterations=1)
-        result=cv2.inpaint(img,mask,9,cv2.INPAINT_NS)
+        result=cv2.inpaint(img,mask,5,cv2.INPAINT_TELEA)
         for box in boxes: result=_place_logo(result,logo_path,box)
         cv2.imwrite(str(p),result,[int(cv2.IMWRITE_JPEG_QUALITY),92]); processed+=1
     return processed, detected
@@ -319,5 +315,4 @@ def download(folder, filename):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=False)
